@@ -7,8 +7,9 @@ import {
   Keyboard,
   TouchableOpacity,
 } from 'react-native';
-import Formulario from './components/Formulario';
 import {Overlay, Divider} from 'react-native-elements';
+import Formulario from './components/Formulario';
+import Clima from './components/Clima';
 
 const App = () => {
   const [search, setSearch] = useState({
@@ -19,6 +20,9 @@ const App = () => {
   const [result, setResult] = useState({});
   const {city, country} = search;
   const [consulted, setConsulted] = useState(false);
+  const [bgColor, setBgColor] = useState('rgb(71,149,212)');
+
+  const bgColorApp = {backgroundColor: bgColor};
 
   const toggleOverlay = () => {
     setVisible(!visible);
@@ -32,7 +36,23 @@ const App = () => {
           const apiResult = await response.json();
           setResult(apiResult);
           setConsulted(false);
+
+          //BGColor according to temperature
+
+          const kelvin = 273.15;
+
+          const {main} = apiResult;
+          const current = main.temp - kelvin;
+
+          if (current < 10) {
+            setBgColor('rgb(105,108,149)');
+          } else if (current >= 10 && current < 25) {
+            setBgColor('rgb(71,149,212)');
+          } else {
+            setBgColor('rgb(178,28,61)');
+          }
         } catch (err) {
+          console.log(err);
           toggleOverlay();
         }
       }
@@ -42,9 +62,11 @@ const App = () => {
   return (
     <>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={styles.app}>
+        <View style={[styles.app, bgColorApp]}>
           <View>
             <View style={styles.content}>
+              <Clima result={result} />
+
               <Formulario
                 search={search}
                 setSearch={setSearch}
@@ -88,7 +110,6 @@ const styles = StyleSheet.create({
   },
   app: {
     flex: 1,
-    backgroundColor: 'rgb(71,149,212)',
     justifyContent: 'center',
   },
 });

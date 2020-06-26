@@ -80,6 +80,8 @@ const Formulario = ({search, setSearch, setConsulted}) => {
             <Picker.Item label="Colombia" value="CO" />
             <Picker.Item label="Italy" value="IT" />
             <Picker.Item label="Portugal" value="PT" />
+            <Picker.Item label="Rusia" value="RU" />
+            <Picker.Item label="Argentina" value="AR" />
           </Picker>
         </View>
 
